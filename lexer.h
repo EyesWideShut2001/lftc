@@ -15,12 +15,12 @@ enum{
 #define MAX_STR		127
 
 typedef struct{
-	int code;		// ID, TYPE_INT, ...
-	int line;		// the line from the input file
+	int code;		
+	int line;		
 	union{
-		char text[MAX_STR+1];		// the chars for ID, STR
-		int i;		// the value for INT
-		double r;		// the value for REAL
+		char text[MAX_STR+1];		
+		int i;		
+		double r;		
 		};
 	}Token;
 

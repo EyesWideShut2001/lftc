@@ -1,4 +1,4 @@
-// the C standard must be at least C11
+
 #pragma once
 
 #include <stddef.h>

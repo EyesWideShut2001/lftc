@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "lexer.h"
 #include "utils.h"
@@ -8,10 +9,9 @@
 Token tokens[MAX_TOKENS];
 int nTokens;
 
-int line=1;		// the current line in the input file
+int line=1;		
 
-// adds a token to the end of the tokens list and returns it
-// sets its code and line
+
 Token *addTk(int code){
 	if(nTokens==MAX_TOKENS)err("too many tokens");
 	Token *tk=&tokens[nTokens];
@@ -21,7 +21,7 @@ Token *addTk(int code){
 	return tk;
 	}
 
-// copy in the dst buffer the string between [begin,end)
+
 char *copyn(char *dst,const char *begin,const char *end){
 	char *p=dst;
 	if(end-begin>MAX_STR)err("string too long");
@@ -37,13 +37,14 @@ void tokenize(const char* pch) {
 
 	for (;;) {
 		switch (*pch) {
+
 		case ' ': case '\t':
 			pch++;
 			break;
 
-		case '\r': // handles Windows (\r\n), Linux (\n), MacOS (\r)
+		case '\r': 
 			if (pch[1] == '\n') pch++;
-			// fallthrough
+			
 		case '\n':
 			line++;
 			pch++;
@@ -53,7 +54,7 @@ void tokenize(const char* pch) {
 			addTk(FINISH);
 			return;
 
-			// delimiters
+			
 		case ',':
 			addTk(COMMA); pch++; break;
 		case ':':
@@ -65,7 +66,7 @@ void tokenize(const char* pch) {
 		case ')':
 			addTk(RPAR); pch++; break;
 
-			// operators
+			
 		case '+':
 			addTk(ADD); pch++; break;
 		case '-':
@@ -75,9 +76,11 @@ void tokenize(const char* pch) {
 		case '/':
 			addTk(DIV); pch++; break;
 		case '=':
-			if (pch[1] == '=') { addTk(EQUAL); pch += 2; }
+			if (pch[1] == '=') 
+				{ addTk(EQUAL); pch += 2; }
 			else { addTk(ASSIGN); pch++; }
 			break;
+
 		case '!':
 			if (pch[1] == '=') { addTk(NOTEQ); pch += 2; }
 			else { addTk(NOT); pch++; }
@@ -102,7 +105,7 @@ void tokenize(const char* pch) {
 				for (start = pch++; isalnum(*pch) || *pch == '_'; pch++);
 				char* text = copyn(buf, start, pch);
 
-				// keywords
+				
 				if (strcmp(text, "int") == 0) addTk(TYPE_INT);
 				else if (strcmp(text, "real") == 0) addTk(TYPE_REAL);
 				else if (strcmp(text, "str") == 0) addTk(TYPE_STR);
@@ -123,11 +126,11 @@ void tokenize(const char* pch) {
 				char* num = copyn(buf, start, pch);
 				if (strchr(num, '.')) {
 					tk = addTk(REAL);
-					strcpy(tk->text, num);
+					tk->r = atof(buf);
 				}
 				else {
 					tk = addTk(INT);
-					strcpy(tk->text, num);
+					tk->i = atoi(buf);
 				}
 			}
 			else if (*pch == '"') {
@@ -149,13 +152,14 @@ void showTokens() {
 	for (int i = 0; i < nTokens; i++) {
 		Token* tk = &tokens[i];
 		printf("%d ", tk->line);
+
 		switch (tk->code) {
 			// identifiers and strings
 		case ID:        printf("ID:%s", tk->text); break;
 		case STR:       printf("STR:%s", tk->text); break;
 
 			// constants
-		case INT:       printf("INT:%d", tk->i); break;
+		case INT:       printf("INT:%d",  tk->i); break;
 		case REAL:      printf("REAL:%g", tk->r); break;
 
 			// keywords
@@ -197,3 +201,4 @@ void showTokens() {
 		printf("\n");
 	}
 }
+
