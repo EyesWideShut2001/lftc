@@ -11,6 +11,6 @@ int main()
 	tokenize(inbuf);
 	showTokens();
 	
-	// parse();
+	 parse();
 	return 0;
 }
