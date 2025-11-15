@@ -38,12 +38,12 @@ void tokenize(const char* pch) {
 	for (;;) {
 		switch (*pch) {
 
-		case ' ': case '\t':
+		case ' ': case '\t': case '\r':
+		
 			pch++;
 			break;
 
-		case '\r': 
-			if (pch[1] == '\n') pch++;
+	
 			
 		case '\n':
 			line++;
@@ -65,7 +65,7 @@ void tokenize(const char* pch) {
 			addTk(LPAR); pch++; break;
 		case ')':
 			addTk(RPAR); pch++; break;
-
+		
 			
 		case '+':
 			addTk(ADD); pch++; break;
@@ -74,7 +74,11 @@ void tokenize(const char* pch) {
 		case '*':
 			addTk(MUL); pch++; break;
 		case '/':
-			addTk(DIV); pch++; break;
+			if (pch[1] == '/') 
+				{  pch += 2; while (pch[0]&& pch[0]!='\n') pch++;}
+			else { addTk(DIV); pch++; }
+			break;
+			
 		case '=':
 			if (pch[1] == '=') 
 				{ addTk(EQUAL); pch += 2; }
@@ -196,6 +200,8 @@ void showTokens() {
 		case LESS:      printf("LESS"); break;
 		case GREATER:   printf("GREATER"); break;
 		case GREATERQ:  printf("GREATERQ"); break;
+		case SPACE:     printf("SPACE"); break;
+	
 		default:        printf("UNKNOWN(%d)", tk->code); break;
 		}
 		printf("\n");
