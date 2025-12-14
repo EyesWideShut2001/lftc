@@ -27,8 +27,6 @@ bool consume(int code){
 }
 
 void initBuiltins() {
-    
-    
     Symbol *s;
 
     s = addSymbol("puti", KIND_FN);
@@ -142,7 +140,7 @@ bool defFunc(){
 
         if(!consume(END)) tkerr("missing END");
         
-        void delDomain();
+        delDomain();
 
         crtFn = NULL;
 

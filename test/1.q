@@ -1,5 +1,4 @@
 //program de test
-
 function max (x:int, y:int):int 
     if(x<y)
         return y;
